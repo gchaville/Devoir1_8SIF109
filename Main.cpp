@@ -7,42 +7,43 @@
 
 void afficher (void);
 
-DossierProfesseur::DossierProfesseur (std::string FP)
+DossierProfesseur::DossierProfesseur (std::string FP) /* Constructeur */
 {
-	std::ifstream entree;
+	std::ifstream entree;/* Ouverture en mode fichier */
 	tete = courant_prof = new Professeur;
-	entree.open (FP.c_str());
-	if (entree.fail ())
+	entree.open (FP.c_str()); /* Ouverture du fichier */
+	if (entree.fail ()) /* Si le fichier n'ouvre pas */
 	{
 		std::cout << "Erreur d'ouverture";
+		entree.close(); /* Fermeture du fichier */
 	}
 	else // CREE TETE LISTE
 	{
-		while  (!entree.eof()) // CREE PROFESSEUR SUIVANT
+		while  (!entree.eof()) /* Boucle tant que le fichier n'est pas terminé */
 		{
 			getline (entree, courant_prof->nom);
 			getline (entree, courant_prof->prenom);
 			courant_prof->listecours = new Cours;  // cree liste de cours
 			courant_cours = courant_prof->listecours;
 			getline (entree, courant_cours->sigle);
-			while (courant_cours->sigle != "&")
+			while (courant_cours->sigle != "&") /* arret pour le chaine de cours */
 			{
 				courant_cours->suivant = new Cours; // ajoute nouveau cours
 				courant_cours = courant_cours->suivant;
 				getline (entree, courant_cours->sigle);
 			}
-			courant_cours->suivant = NULL;
+			courant_cours->suivant = NULL; /* Fin de la liste de cour */
 			courant_prof->listetudiant = new Etudiant; // cree liste etudiant
 			courant_etu = courant_prof->listetudiant;
 			getline (entree, courant_etu->nom);
-			while (courant_etu->nom != "&")
+			while (courant_etu->nom != "&") /* meme arret que le courant cours */
 			{
 				courant_etu->apres = new Etudiant; // ajoute nouveau etudiant
 				courant_etu = courant_etu->apres;
 				getline (entree, courant_etu->nom);
 			}
-			courant_etu->apres = NULL;
-			if (!entree.eof())
+			courant_etu->apres = NULL;/* arret de la liste d'etudiant */
+			if (!entree.eof()) /* Nous pouvons faire un do while au lieu */
 			{
 				courant_prof->suivant = new Professeur; // cree nouveau professeur
 				courant_prof = courant_prof->suivant;
@@ -50,58 +51,60 @@ DossierProfesseur::DossierProfesseur (std::string FP)
 		}
 		courant_prof->suivant = NULL;
 	}
-	entree.close();
+	entree.close(); /* Fermeture du fichier */
 	courant_prof = tete; // re-pointe courant prof sur la tete
 }
 
-DossierProfesseur::~DossierProfesseur ( )
+DossierProfesseur::~DossierProfesseur ( ) /*Destructeur */
 {
 	courant_prof = tete;
-	while (courant_prof != NULL)
+	while (courant_prof != NULL)/* boucle qui termine la chaine */
 	{
-		courant_etu = courant_prof->listetudiant;
-		while (courant_etu != NULL)
+		courant_etu = courant_prof->listetudiant;/*Pointe sur la liste etudiant */
+		while (courant_etu != NULL) /*parcour la liste etudaint */
 		{
 			courant_prof->listetudiant= courant_etu->apres;
-			delete courant_etu;
+			delete courant_etu; /*Détruit un élément de la chaine */
 			courant_etu = courant_prof->listetudiant;
 		}
 		courant_cours = courant_prof->listecours;
-		while (courant_cours != NULL)
+		while (courant_cours != NULL) /*rentre dans la chaine de cours */
 		{
 			courant_prof->listecours= courant_cours->suivant;
-			delete courant_cours;
+			delete courant_cours;/* destruction d'un element de la chaine */
 			courant_cours = courant_prof->listecours;
 		}
-		tete = courant_prof->suivant;
-		delete courant_prof;
-		courant_prof = tete;
+		tete = courant_prof->suivant;/*pointe sur la tete de l'élément prof */
+		delete courant_prof; /* détruit l'element prof */
+		courant_prof = tete; /* redonne la position de la tete */
 	}
 }
 
 void DossierProfesseur::supprimer (std::string nom, std::string prenom )
+/* recois un nom et un prenom appartire du fichier texte que l'utilisateur doit composer */
 {
-	Professeur *precedent;
+	Professeur *precedent;/* Pointeur qui permet de trouver le nom et prenom */
 	precedent = NULL;
 	courant_prof = tete;
 
 	while (courant_prof != NULL && courant_prof->nom != nom && courant_prof->prenom != prenom)
+	/* Condition pour trouver un nom et prenom ou arrete à la fin du fichier */
 	{
-		precedent = courant_prof;
+		precedent = courant_prof; /* Précédent va prendre la position du professeur courant et elle peut-sortire pas la suite */
 		courant_prof = courant_prof->suivant;
 	}
 	if (courant_prof == NULL)
 	{
 		std::cout << std::endl << "Le professeur recherche n'existe pas." << std::endl;
 	}
-	else 
+	else
 	{
-		if (precedent != NULL) // si precedent n'est pas la tete
+		if (precedent != NULL) /* si precedent a pris la position de courant prof*/
 			precedent->suivant = courant_prof->suivant;
-		else // s'il l'est
+		else // si precedent est égale à null
 			tete = tete->suivant;
 		delete courant_prof;
-		recopier ("FP.txt");
+		recopier ("FP.txt");//appel la fonction recopier qui copier les modification
 	}
 	courant_prof = tete;
 }
@@ -148,7 +151,7 @@ int DossierProfesseur::affichernbreprofpouruncours (std::string coursdonne) cons
 {
 	int nbprofpourcours = 0;
 	courant_prof = tete;
-	
+
 	while (courant_prof != NULL)
 	{
 		courant_cours = courant_prof->listecours;
@@ -177,7 +180,7 @@ std::string DossierProfesseur::affichercoursplusdemande ( ) const
 	courant_cours = courant_prof->listecours;
 	coursrecherche = courant_prof->listecours;
 	nbre = affichernbreprofpouruncours (courant_cours->sigle);
-	
+
 	while (courant_prof != NULL)
 	{
 		courant_cours = courant_prof->listecours;
@@ -236,11 +239,11 @@ void main ()
 {
 	std::string cours;
     std::string desnom, desprenom;
-	std::ifstream ft_entree; 
-	char choix; 
+	std::ifstream ft_entree;
+	char choix;
 	int coursplusdemande;
 	DossierProfesseur first ("FP.txt");
-	
+
 	afficher ();
 	ft_entree.open ("test.txt");
 	if (ft_entree.fail ())
@@ -252,7 +255,7 @@ void main ()
 		while (!ft_entree.eof())
 		{
 			ft_entree >> choix;
-			switch (choix) 
+			switch (choix)
 			{
 			case '-':ft_entree >> desnom >> desprenom;
 					 first.supprimer(desnom, desprenom);
@@ -281,7 +284,7 @@ void main ()
 void afficher (void)
 {
 	while (courant_prof!=NULL)
-	{ 
+	{
 		std::cout << std::endl << "-------------------------------------------------------------------" << std::endl;
 		std::cout << courant_prof->nom << "  " << courant_prof->prenom << std::endl;
 		courant_cours = courant_prof->listecours;
@@ -299,7 +302,3 @@ void afficher (void)
 		courant_prof = courant_prof->suivant;
 	}
 }
-
-
-
-
