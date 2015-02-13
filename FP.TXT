@@ -1,23 +1,41 @@
+Hatari
+James
+8SIF100
+8SIF101
+8SIF102
+8SIF103
+&
+Vendu Georges
+Lautre Gary
+&
 Master
 Slim
-SIG100
-SIG100
-SIG100
-SIG100
+8SIF100
+6HIY526
+8KIU745
 &
-Gillian
-Daehli
+Gillian Chaville
+Daehli Nadeau
 &
-Capitaine
-Crochet
-SIG100
-SIG102
-SIG104
+Hatario
+Franck
+1ZED100
+2YUL200
+3WAK300
 &
-Maxime
-Jérémie
-André
-Dallaire
-Éric
-Jean-Luc
+Sami Lee
+Shen Fuo
+Feng Shui
+&
+Kellogs
+Berny
+8SIF100
+4GIF531
+4GIF532
+6HIY526
+4GIF535
+&
+Umberto Dario
+Velocidad Hector
+Nami Oscar
 &
